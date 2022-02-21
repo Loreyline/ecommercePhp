@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil
+{% endblock %}
+
+{% block body %}
+
+	<h1 class="text-warning mt-3">Mon Profil</h1>
+
+	<ul>
+		<li><a class=""href="{{ path('modifPassword') }}">Modifier le mot de passe</a></li>
+		<li><a class=""href="{{path('afficher_adresse')}}">Gérer mes adresses</a></li>
+
+		<li><a class=""href="{{path('commandes')}}">Historique des commandes</a></li>
+	</ul>
+{% endblock %}

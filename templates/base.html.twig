@@ -1,19 +1,140 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}e-commerce!
+			{% endblock %}
+		</title>
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
-</html>
+
+		{% block stylesheets %}
+			<link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+			<link href="{{ asset('style.css') }}" rel="stylesheet">
+		{% endblock %}
+
+		{% block javascripts %}
+			<script src="{{ asset('assets/js/bootstrap.bundle.js') }}"></script>
+		{% endblock %}
+
+		{% block jsStripe %}{% endblock %}
+	</head>
+	<body>
+		{% block menu %}
+			<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="/">e-commerce</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+
+					<div class="collapse navbar-collapse" id="navbarColor01">
+						<ul class="navbar-nav me-auto">
+							<li class="nav-item">
+								<a class="nav-link active" href="{{ path('admin') }}">Administration
+									<span class="visually-hidden">(current)</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('catalogue')}}">Catalogue</a>
+							</li>
+
+						</ul>
+						<ul class="d-flex navbar-nav">
+							<li class="nav-item">
+								<a class="nav-link fs-4 mx-5" href="{{ path('panier')}}">
+									<i class="fas fa-shopping-basket">
+
+										<span class="position-absolute mx-3 translate-middle badge rounded-pill bg-danger">
+											{{monPanier.nbArticles()}}
+										</span>
+									</i>
+								</a>
+							</li>
+							{% if app.user %}
+								<li "nav-item">
+									<div class="nav-link">
+										Bonjour
+										{{ app.user.prenom }}
+
+									</div>
+								</li>
+
+								<li "nav-item">
+									<a class="nav-link" href="{{ path('profil') }}">
+										<i class="fas fa-user"></i>
+									</a>
+								</li>
+								<li "nav-item">
+									<div class="nav-link">
+										|
+									</div>
+								</li>
+								<li "nav-item">
+									<a class="nav-link" href="{{ path('app_logout') }}">
+										<i class="fa-solid fa-door-open"></i>
+									</a>
+								</li>
+							{% else %}
+								<li "nav-item">
+									<a class="nav-link" href="{{path('inscription')}}">s'inscrire</a>
+								</li>
+								<li "nav-item">
+									<div class="nav-link">
+										|
+									</div>
+								</li>
+								<li "nav-item">
+									<a class="nav-link" href="{{path('app_login')}}">se connecter</a>
+								</li>
+							{% endif %}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</body>
+	</html>
+</nav>{% endblock %}{% block body %}{% endblock %}{% block footer %}
+<footer class="w-100 py-4 flex-shrink-0 foot">
+	<div class="container py-4">
+		<div class="row gy-4 gx-5">
+			<div class="col-lg-4 col-md-6">
+				<h5 class="h1 text-white">FB.</h5>
+				<p class="small text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+				<p class="small text-muted mb-0">&copy; Copyrights. All rights reserved.
+					<a class="text-primary" href="#">Bootstrapious.com</a>
+				</p>
+			</div>
+			<div class="col-lg-2 col-md-6">
+				<h5 class="text-white mb-3">Liens Express</h5>
+				<ul class="list-unstyled text-muted">
+					<li>
+						<a href="{{path('accueil')}}">Accueil</a>
+					</li>
+					<li>
+						<a href="#">a Propos</a>
+					</li>
+					<li>
+						<a href="#">Action</a>
+					</li>
+					<li>
+						<a href="#">FAQ</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<h5 class="text-white mb-3">Newsletter</h5>
+				<p class="small text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+				<form action="#">
+					<div class="input-group mb-3">
+						<input class="form-control" type="text" placeholder="Adresse email" aria-label="email" aria-describedby="button-addon2">
+						<button class="btn btn-primary" id="button-addon2" type="button">
+							<i class="fas fa-paper-plane"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</footer>{% endblock %}</body>{% block script %}{% endblock %}</html>

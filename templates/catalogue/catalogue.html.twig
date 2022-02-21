@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-2">
+			<h4>Filtres</h4>
+			{{ form (form) }}
+			</div>
+
+			<div class="col-md-10">
+				<div class="row product-container">
+					{% for article in articles %}
+						<div class="col-md-4">
+							<div class="card border-primary mb-3 ">
+								<div class="card-header">{{article.name}}</div>
+								<a href="{{path ('article_show', {'id' : article.id})}}">
+									<div class="card-body">
+										<div class="row">
+											<h4 class="card-title col md-4">{{article.subtitle}}</h4>
+											<div class="col-md-4">
+												{% if ( article.isBest ) %}
+													<span class="badge rounded-pill bg-success">Meilleure vente</span>
+												{% endif %}
+											</div>
+											<div class="col-md-4">{{(article.prix/100)|number_format(2, ',', '.')}}
+												€
+											</div>
+										</div>
+										<img src="/assets/images/produits/{{article.image}}" alt="{{article.description}}" class="d-block w-100">
+									</div>
+								</a>
+								<div class="row">
+									<div class="col-md-4"></div>
+									<a href="{{path ('ajouterPanier', {'id' : article.id})}}" class=" col-md-2 ">
+										<i class="fas fa-cart-plus">Ajouter</i>
+									</a>
+									<div class="col-md-4"></div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+			</div>
+		{% endblock %}

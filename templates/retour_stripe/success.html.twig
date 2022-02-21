@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Success
+{% endblock %}
+
+{% block body %}
+	<div class="alert alert-dismissible alert-success">
+		<strong>Commande passée avec succès</strong><br></div>
+	<div class="row">
+		<div class="col-md-4">
+			<div>
+				<strong>Adresse de Livraison</strong><br>
+				<hr>
+				{{ commande.adresseLivraison | replace({'[br]' : '<br\>'})|raw  }}
+				<hr>
+			</div>
+			<div class="col-md-6">
+				<strong>Adresse de Facturation</strong><br>
+				<hr>
+				{{ commande.adresseFacturation  | replace({'[br]' : '<br\>'})|raw }}
+				<hr>
+			</div>
+			<div class="col-md-6">
+				<strong>Transporteur choisi</strong><br>
+				<hr>
+				{{ commande.transporteur }}
+				<br>
+				{{ (commande.transPrix)|number_format(2, ',', '.')}}
+				€
+				<hr>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<h2>
+				Récapitulatif de la commande référence
+				{{ commande.reference }}
+			</h2>
+
+			<div>
+				{% set total = null %}
+				{% for article in commande.LigneCommandes %}
+					<div class="row">
+						<div class="col-2">{{article.articleNom}}</div>
+						<div class="col-2">{{article.articleQuantite}}</div>
+						<div class="col-2">{{(article.articlePrix / 100)|number_format(2, ',', '.')}}
+							€</div>
+						<div class="col-2">{{(article.total / 100)|number_format(2, ',', '.')}}
+							€</div>
+					</div>
+					{% set total = total +  article.total  %}
+				{% endfor %}
+				<hr>
+				<div class="text-end">
+					<strong>Sous total :
+						{{ (total / 100)|number_format(2, ',', '.')}}
+						€</strong>
+					<br>
+					<strong>Frais de Livraison :
+					</strong>
+					{{ (commande.transPrix)|number_format(2, ',', '.')}}
+					€
+					<br>
+					<strong>Total :
+					</strong>
+					{{ ((total / 100 + commande.transPrix ))|number_format(2,',','.') }}
+					€
+					<br>
+					<hr>
+					<p>commande passée le :
+						{{ commande.createdAt |date("d/m/Y") }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

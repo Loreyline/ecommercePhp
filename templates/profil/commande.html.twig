@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{cmd.reference}}
+{% endblock %}
+{% block jsStripe %}
+	<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+{% block body %}
+
+	<div class="row">
+		<div class="col-md-4">
+			<div>
+				<strong>Adresse de Livraison</strong><br>
+				<hr>
+				{{ cmd.adresseLivraison | replace({'[br]' : '<br\>'})|raw  }}
+				<hr>
+			</div>
+			<div class="col-md-6">
+				<strong>Adresse de Facturation</strong><br>
+				<hr>
+				{{ cmd.adresseFacturation  | replace({'[br]' : '<br\>'})|raw }}
+				<hr>
+			</div>
+			<div class="col-md-6">
+				<strong>Transporteur choisi</strong><br>
+				<hr>
+				{{ cmd.transporteur }}
+				<br>
+				{{ (cmd.transPrix)|number_format(2, ',', '.')}}
+				€
+				<hr>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<h2 class=" alert alert-dismissible alert-warning">
+				Récapitulatif de la commande référence
+				{{cmd.reference}}
+			</h2>
+			<div>
+				{% set total = null %}
+				{% for article in cmd.LigneCommandes %}
+					<div class="row">
+						<div class="col-2">{{article.articleNom}}</div>
+						<div class="col-2">{{article.articleQuantite}}</div>
+						<div class="col-2">{{(article.articlePrix / 100)|number_format(2, ',', '.')}}
+							€</div>
+						<div class="col-2">{{(article.total / 100)|number_format(2, ',', '.')}}
+							€</div>
+					</div>
+					{% set total = total +  article.total  %}
+				{% endfor %}
+				<hr>
+				<div class="text-end">
+					<strong>Sous total :
+						{{ (total / 100)|number_format(2, ',', '.')}}
+						€</strong>
+					<br>
+					<strong>Frais de Livraison :
+					</strong>
+					{{ (cmd.transPrix)|number_format(2, ',', '.')}}
+					€
+					<br>
+					<strong>Total à payer :
+					</strong>
+					{{ ((total / 100 + cmd.transPrix ))|number_format(2,',','.') }}
+					€
+					<hr>
+					<strong>commande payée :
+					</strong>
+					{% if cmd.isfinalisee %}
+
+						<i class="fa-solid fa-circle-check text-success"></i>
+					{% else %}
+						<i class="fa-solid fa-circle-xmark text-danger"></i><br>
+						<a id="btnPayer" class="btn btn-success btn-block">Payer |
+							{{ ((total / 100 + cmd.transPrix ))|number_format(2,',','.') }}
+							€</a>
+					{% endif %}
+					<hr>
+					<p>commande faite le :
+						{{ cmd.createdAt |date("d/m/Y") }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}
+	<script type="text/javascript">
+		// Utiliser la clé public pour réceptionner l'évènement
+var stripe = Stripe("pk_test_51KT0u7IDqUuSHYx0V9UwD2aNGHKwmWDQT5r5Mih0JROZSGZ2vvezlkb8eXJrSC7P8M6MTyKe3HXfNCrYJLbgiBmx00Hk0ZIN81");
+var checkBtn = document.getElementById('btnPayer');
+checkBtn.addEventListener("click", function () {
+fetch("/profil/commande/create-session/      {{ reference }}", {method: 'POST'}).then(function (response) {
+return response.json();
+}).then(function (session) {
+return stripe.redirectToCheckout({sessionId: session.id})
+}).then(function (result) {
+if (result.error) {
+alert(result.error.message);
+}
+}).catch(function (error) {
+console.error("Error:", error);
+});
+});
+	</script>
+{% endblock %}

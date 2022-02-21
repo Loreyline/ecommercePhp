@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes
+{% endblock %}
+
+{% block body %}
+
+	<h2 class="alert alert-dismissible alert-warning">Liste de mes commandes</h2>
+	{% if app.user.commandes|length == 0 %}
+		<h5 class="text-center">
+			Vous n'avez pas encore passé de commande. Pour commander
+			<a href="{{ path('catalogue')}}">cliquez ici</a>
+		</h5>
+	{% else %}
+		<div class="row">
+			{% for cmd in app.user.commandes %}
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-6">{{ cmd.reference }}</div>
+						<div class="col-3">le
+							{{ cmd.createdAt |date("d/m/Y") }}</div>
+						{% if cmd.isFinalisee %}
+							<div class="col-3">
+								<i class="fa-solid fa-circle-check text-success"></i>
+								<a href="{{ path ('commande',{'reference' : cmd.reference})}}">
+									<i class="fas fa-eye"></i>
+								</a>
+							</div>
+						{% else %}
+							<div class="col-3">
+								<i class="fa-solid fa-circle-xmark text-danger"></i>
+								<a href="{{ path ('commande',{'reference' : cmd.reference})}}">
+									<i class="fas fa-eye"></i>
+								</a>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}
